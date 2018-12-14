@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8933E4B1-5F19-47FB-A147-E6321EEF1D70}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfClock", "..\WpfClock\WpfClock.csproj", "{B12507A1-9977-408F-A72E-E7C9998E5AED}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MfcClock", "MfcClock\MfcClock.vcxproj", "{9D9A71EE-A97E-4D16-972B-C9F58C108DDA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B12507A1-9977-408F-A72E-E7C9998E5AED}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B12507A1-9977-408F-A72E-E7C9998E5AED}.Debug|x64.Build.0 = Debug|Any CPU
+		{B12507A1-9977-408F-A72E-E7C9998E5AED}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B12507A1-9977-408F-A72E-E7C9998E5AED}.Debug|x86.Build.0 = Debug|Any CPU
+		{B12507A1-9977-408F-A72E-E7C9998E5AED}.Release|x64.ActiveCfg = Release|Any CPU
+		{B12507A1-9977-408F-A72E-E7C9998E5AED}.Release|x64.Build.0 = Release|Any CPU
+		{B12507A1-9977-408F-A72E-E7C9998E5AED}.Release|x86.ActiveCfg = Release|Any CPU
+		{B12507A1-9977-408F-A72E-E7C9998E5AED}.Release|x86.Build.0 = Release|Any CPU
+		{9D9A71EE-A97E-4D16-972B-C9F58C108DDA}.Debug|x64.ActiveCfg = Debug|x64
+		{9D9A71EE-A97E-4D16-972B-C9F58C108DDA}.Debug|x64.Build.0 = Debug|x64
+		{9D9A71EE-A97E-4D16-972B-C9F58C108DDA}.Debug|x86.ActiveCfg = Debug|Win32
+		{9D9A71EE-A97E-4D16-972B-C9F58C108DDA}.Debug|x86.Build.0 = Debug|Win32
+		{9D9A71EE-A97E-4D16-972B-C9F58C108DDA}.Release|x64.ActiveCfg = Release|x64
+		{9D9A71EE-A97E-4D16-972B-C9F58C108DDA}.Release|x64.Build.0 = Release|x64
+		{9D9A71EE-A97E-4D16-972B-C9F58C108DDA}.Release|x86.ActiveCfg = Release|Win32
+		{9D9A71EE-A97E-4D16-972B-C9F58C108DDA}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1F3419F7-5835-43DB-A91D-A90632E0FAEC}
+	EndGlobalSection
+EndGlobal
