@@ -112,11 +112,19 @@ int CMfcClockView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 										 0, 0, 0, 0,	//	サイズを0,0にしておくと、リサイズに追従する
 										 "WpfClock.Clock", System::IntPtr( m_hWnd ) );
 	//WpfClock::Clock^ page = gcnew WpfClock::Clock();
-	WpfClock::PhoneButtonsPage^ page = gcnew WpfClock::PhoneButtonsPage();
-	page->Background = System::Windows::SystemColors::WindowBrush;	//	Windowsの標準背景を強制的に配置(WPFのデフォルトと同じ処理)
-	m_source->RootVisual = page;
-	page->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
-
+	m_source->RootVisual = gcnew WpfClock::Clock();
+	m_source->RootVisual = gcnew WpfClock::PhoneButtonsPage();
+	m_source->RootVisual = gcnew WpfClock::PhotoListPage();
+	System::Windows::Controls::Page^ page = dynamic_cast<System::Windows::Controls::Page^>(m_source->RootVisual);
+	if( page != nullptr )
+	{
+		page->Background = System::Windows::SystemColors::WindowBrush;	//	Windowsの標準背景を強制的に配置(WPFのデフォルトと同じ処理)
+	}
+	WpfClock::PhoneButtonsPage^ buttonsPage = dynamic_cast<WpfClock::PhoneButtonsPage^>(page);
+	if( buttonsPage != nullptr )
+	{
+		buttonsPage->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
+	}
 	return 0;
 }
 void CMfcClockView::OnSize( UINT nType, int cx, int cy )
@@ -131,7 +139,10 @@ void CMfcClockView::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
 	auto page = dynamic_cast<WpfClock::PhoneButtonsPage^>(m_source->RootVisual);
-	page->Text = L"";
+	if( page != nullptr )
+	{
+		page->Text = L"";
+	}
 }
 #include <msclr\marshal_atl.h>
 void CMfcClockView::OnEnter( System::Object^ sender, System::EventArgs^ e )
