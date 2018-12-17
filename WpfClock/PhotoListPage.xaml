@@ -4,7 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfClock"
-      mc:Ignorable="d" 
+      mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800"
       Title="PhotoListPage">
 	<Page.Resources>
 		<Style TargetType="ListBox">
@@ -12,7 +12,9 @@
 				<Setter.Value>
 					<ControlTemplate TargetType="ListBox">
 						<Border BorderThickness="2" BorderBrush="Black">
-							<StackPanel IsItemsHost="True" Orientation="Horizontal" />
+							<ScrollViewer>
+								<WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+							</ScrollViewer>
 						</Border>
 					</ControlTemplate>
 				</Setter.Value>
@@ -24,7 +26,7 @@
 			<Style.Triggers>
 				<Trigger Property="IsMouseOver" Value="True">
 					<Trigger.Setters>
-						<Setter Property="Width" Value="300" />
+						<Setter Property="Width" Value="400" />
 						<Setter Property="Margin" Value="10" />
 					</Trigger.Setters>
 				</Trigger>
@@ -33,7 +35,7 @@
 	</Page.Resources>
 	<StackPanel>
 		<Label FontSize="30" HorizontalAlignment="Center">My Photos</Label>
-		<ListBox HorizontalAlignment="Center">
+		<ListBox>
 			<Image Source="Media/横浜11.jpg" />
 			<Image Source="Media/東京114.jpg" />
 			<Image Source="Media/tocchann2018.jpg" />
