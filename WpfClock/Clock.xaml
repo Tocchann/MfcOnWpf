@@ -4,14 +4,22 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfClock"
-      mc:Ignorable="d" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+      mc:Ignorable="d" d:DesignHeight="110" d:DesignWidth="110"
+			>
+	<!--<Page.Background>
+		<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+			<GradientStop Color="#fcfcfe" Offset="0" />
+			<GradientStop Color="#f6f4f0" Offset="1.0" />
+		</LinearGradientBrush>
+	</Page.Background>-->
+	<!--Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"-->
 	<Grid>
-		<!--<Grid.Background>
+		<Grid.Background>
 			<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
 				<GradientStop Color="#fcfcfe" Offset="0" />
 				<GradientStop Color="#f6f4f0" Offset="1.0" />
 			</LinearGradientBrush>
-		</Grid.Background>-->
+		</Grid.Background>
 
 		<Grid Name="PodClock" HorizontalAlignment="Center" VerticalAlignment="Center">
 			<Grid.Resources>

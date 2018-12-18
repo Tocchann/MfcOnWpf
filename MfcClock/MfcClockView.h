@@ -6,6 +6,21 @@
 
 #include <msclr/event.h>
 
+template<typename T>
+struct gcrootex : public gcroot<T>
+{
+	gcrootex& operator=( T t )
+	{
+		gcroot::operator=( t );
+		return *this;
+	}
+	operator bool() const
+	{
+		T obj = *this;
+		return obj != nullptr;
+	}
+};
+
 class CMfcClockView : public CView
 {
 protected: // シリアル化からのみ作成します。
@@ -16,7 +31,7 @@ protected: // シリアル化からのみ作成します。
 public:
 	CMfcClockDoc* GetDocument() const;
 private:
-	gcroot<System::Windows::Interop::HwndSource^>	m_source;
+	gcrootex<System::Windows::Interop::HwndSource^>	m_source;
 // 操作
 public:
 
@@ -52,6 +67,10 @@ public:
 	afx_msg int OnCreate( LPCREATESTRUCT lpCreateStruct );
 	afx_msg void OnSize( UINT nType, int cx, int cy );
 	virtual void OnInitialUpdate();
+	virtual BOOL PreTranslateMessage( MSG* pMsg );
+	virtual void OnActivateView( BOOL bActivate, CView* pActivateView, CView* pDeactiveView );
+	afx_msg void OnSetFocus( CWnd* pOldWnd );
+	afx_msg void OnKillFocus( CWnd* pNewWnd );
 };
 
 #ifndef _DEBUG  // MfcClockView.cpp のデバッグ バージョン
