@@ -44,35 +44,9 @@ CMfcClockView::~CMfcClockView()
 {
 }
 
-BOOL CMfcClockView::PreCreateWindow(CREATESTRUCT& cs)
-{
-	// TODO: この位置で CREATESTRUCT cs を修正して Window クラスまたはスタイルを
-	//  修正してください。
-	cs.style |= WS_CLIPCHILDREN;
-	return CView::PreCreateWindow(cs);
-}
-BOOL CMfcClockView::PreTranslateMessage( MSG* pMsg )
-{
-	auto result = CView::PreTranslateMessage( pMsg );
-
-	return result;
-}
-
 // CMfcClockView 描画
 
-void CMfcClockView::OnDraw(CDC* /*pDC*/)
-{
-	CMfcClockDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
-
-	// TODO: この場所にネイティブ データ用の描画コードを追加します。
-}
-
-
 // CMfcClockView の印刷
-
 BOOL CMfcClockView::OnPreparePrinting(CPrintInfo* pInfo)
 {
 	// 既定の印刷準備
@@ -114,15 +88,13 @@ int CMfcClockView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
 	if( CView::OnCreate( lpCreateStruct ) == -1 )
 		return -1;
-
-	//	WPFコントロールを子ウィンドウとして張り付ける。
-	m_source = gcnew System::Windows::Interop::HwndSource( 0, WS_CHILD | WS_VISIBLE, 0,
-										 0, 0, 0, 0,	//	サイズを0,0にしておくと、リサイズに追従する
-										 "WpfClock.Clock", System::IntPtr( m_hWnd ) );
-	//m_source->RootVisual = gcnew WpfClock::Clock();
-	m_source->RootVisual = gcnew WpfClock::PhoneButtonsPage();
-	//m_source->RootVisual = gcnew WpfClock::PhotoListPage();
-	System::Windows::Controls::Page^ page = dynamic_cast<System::Windows::Controls::Page^>(m_source->RootVisual);
+	auto source = gcnew System::Windows::Interop::HwndSource( 0, WS_CHILD | WS_VISIBLE, 0,
+															  0, 0, 0, 0,	//	サイズを0,0にしておくと、リサイズに追従する
+															  "WpfClock.Clock", System::IntPtr( m_hWnd ) );
+	//source->RootVisual = gcnew WpfClock::Clock();
+	source->RootVisual = gcnew WpfClock::PhoneButtonsPage();
+	//source->RootVisual = gcnew WpfClock::PhotoListPage();
+	System::Windows::Controls::Page^ page = dynamic_cast<System::Windows::Controls::Page^>(source->RootVisual);
 	if( page != nullptr && page->Background == nullptr )
 	{
 		page->Background = System::Windows::SystemColors::WindowBrush;	//	Windowsの標準背景を強制的に配置(WPFのデフォルトと同じ処理)
@@ -132,60 +104,18 @@ int CMfcClockView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	{
 		buttonsPage->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
 	}
+	SetHwndSource( source );
 	return 0;
 }
-void CMfcClockView::OnSize( UINT nType, int cx, int cy )
-{
-	CView::OnSize( nType, cx, cy );
-	//	クライアント領域全面を利用してもらうので、サイズが変わったらリサイズしてやることで対応
-	if( m_source )
-	{
-		auto hwnd = static_cast<HWND>(m_source->Handle.ToPointer());
-		::SetWindowPos( hwnd, nullptr, 0, 0, cx, cy, SWP_NOZORDER|SWP_FRAMECHANGED );
-	}
-}
-
 void CMfcClockView::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
-	auto page = dynamic_cast<WpfClock::PhoneButtonsPage^>(m_source->RootVisual);
+	auto page = dynamic_cast<WpfClock::PhoneButtonsPage^>(GetHwndSource()->RootVisual);
 	if( page != nullptr )
 	{
 		page->Text = L"";
 	}
 }
-void CMfcClockView::OnActivateView( BOOL bActivate, CView* pActivateView, CView* pDeactiveView )
-{
-	TRACE( _T( "OnActivateView(%d,%p,%p):this=%p\n" ), bActivate, pActivateView, pDeactiveView, this );
-	CView::OnActivateView( bActivate, pActivateView, pDeactiveView );
-	if( bActivate  )
-	{
-		if( m_source )
-		{
-			//System::Windows::Input::FocusManager::SetIsFocusScope( m_source->RootVisual, true );
-			//System::Windows::Input::FocusManager::SetFocusedElement( m_source->RootVisual, ここないな。。。 );
-		}
-	}
-}
-void CMfcClockView::OnSetFocus( CWnd* pOldWnd )
-{
-	CView::OnSetFocus( pOldWnd );
-	TRACE( _T( "OnSetFocus()\n" ) );
-	if( m_source )
-	{
-		System::Windows::FrameworkElement^ fe = dynamic_cast<System::Windows::FrameworkElement^>( m_source->RootVisual );
-		if( fe != nullptr )
-		{
-			fe->Focus();	//	子ウィンドウに投げる
-		}
-	}
-}
-void CMfcClockView::OnKillFocus( CWnd* pNewWnd )
-{
-	CView::OnKillFocus( pNewWnd );
-	TRACE( _T( "OnKillFocus()\n" ) );
-}
-
 #include <msclr\marshal_atl.h>
 void CMfcClockView::OnEnter( System::Object^ sender, System::EventArgs^ e )
 {
@@ -193,4 +123,5 @@ void CMfcClockView::OnEnter( System::Object^ sender, System::EventArgs^ e )
 	auto text = msclr::interop::marshal_as<CString>( page->Text );
 	MessageBox( text );
 	page->Text = L"";
+	page->SetDefFocus();
 }

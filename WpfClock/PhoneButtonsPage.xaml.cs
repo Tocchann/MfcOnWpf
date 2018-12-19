@@ -36,6 +36,10 @@ namespace WpfClock
 				Data.Text = value;
 			}
 		}
+		public void SetDefFocus()
+		{
+			Data.Focus();
+		}
 		private void Button_Click( object sender, RoutedEventArgs e )
 		{
 			Data.Text += ((Button)sender).Content.ToString();
