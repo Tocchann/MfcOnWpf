@@ -232,16 +232,14 @@
     <Image Include="res\Toolbar.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\WpfClock\WpfClock.csproj">
       <Project>{b12507a1-9977-408f-a72e-e7c9998e5aed}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Xaml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

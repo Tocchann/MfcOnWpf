@@ -5,12 +5,29 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfClock"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="300" d:DesignWidth="300"
       Title="PhoneButtonsPage"
-			FocusManager.FocusedElement="{Binding ElementName=Data}">
-
-	<Grid>
+			FocusManager.FocusedElement="{Binding ElementName=Data}"
+			>
+	<Page.Resources>
+		<Style x:Key="PhoneMark" TargetType="Button">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate>
+						<Grid>
+							<Ellipse Fill="LightGreen" />
+							<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
+								<Run FontFamily="Segoe MDL2 Assets" Text="&#xE717;"/><Run Text="？"/>
+							</TextBlock>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Page.Resources>
+	<Grid Name="grid" SizeChanged="Page_SizeChanged">
 		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
 			<RowDefinition Height="*" />
 			<RowDefinition Height="*" />
 			<RowDefinition Height="*" />
@@ -22,19 +39,19 @@
 			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="*" />
 		</Grid.ColumnDefinitions>
-		<TextBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" FontSize="36" VerticalAlignment="Center" Name="Data" />
-		<Button Grid.Row="0" Grid.Column="0" Content="7" Click="Button_Click" />
-		<Button Grid.Row="0" Grid.Column="1" Content="8" Click="Button_Click" />
-		<Button Grid.Row="0" Grid.Column="2" Content="9" Click="Button_Click" />
-		<Button Grid.Row="1" Grid.Column="0" Content="4" Click="Button_Click" />
-		<Button Grid.Row="1" Grid.Column="1" Content="5" Click="Button_Click" />
-		<Button Grid.Row="1" Grid.Column="2" Content="6" Click="Button_Click" />
-		<Button Grid.Row="2" Grid.Column="0" Content="1" Click="Button_Click" />
-		<Button Grid.Row="2" Grid.Column="1" Content="2" Click="Button_Click" />
-		<Button Grid.Row="2" Grid.Column="2" Content="3" Click="Button_Click" />
-		<Button Grid.Row="3" Grid.Column="0" Content="*" Click="Button_Click" />
-		<Button Grid.Row="3" Grid.Column="1" Content="0" Click="Button_Click" />
-		<Button Grid.Row="3" Grid.Column="2" Content="#" Click="Button_Click" />
-		<Button Grid.Row="4"  Grid.Column="2" Content="Enter" Click="EnterButton_Click" />
+		<TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="36" VerticalAlignment="Center" Name="Data" TextAlignment="Right" Margin="5,0" />
+		<Button Grid.Row="1" Grid.Column="0" Content="1" Click="Button_Click" Focusable="False" />
+		<Button Grid.Row="1" Grid.Column="1" Content="2" Click="Button_Click" Focusable="False" />
+		<Button Grid.Row="1" Grid.Column="2" Content="3" Click="Button_Click" Focusable="False" />
+		<Button Grid.Row="2" Grid.Column="0" Content="4" Click="Button_Click" Focusable="False" />
+		<Button Grid.Row="2" Grid.Column="1" Content="5" Click="Button_Click" Focusable="False" />
+		<Button Grid.Row="2" Grid.Column="2" Content="6" Click="Button_Click" Focusable="False" />
+		<Button Grid.Row="3" Grid.Column="0" Content="7" Click="Button_Click" Focusable="False" />
+		<Button Grid.Row="3" Grid.Column="1" Content="8" Click="Button_Click" Focusable="False" />
+		<Button Grid.Row="3" Grid.Column="2" Content="9" Click="Button_Click" Focusable="False" />
+		<Button Grid.Row="4" Grid.Column="0" Content="*" Click="Button_Click" Focusable="False" />
+		<Button Grid.Row="4" Grid.Column="1" Content="0" Click="Button_Click" Focusable="False" />
+		<Button Grid.Row="4" Grid.Column="2" Content="#" Click="Button_Click" Focusable="False" />
+		<Button Grid.Row="5" Grid.Column="1" Style="{StaticResource PhoneMark}" Click="EnterButton_Click" Focusable="False" Name="EnterButton" />
 	</Grid>
 </Page>

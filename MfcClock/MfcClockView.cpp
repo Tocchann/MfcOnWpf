@@ -19,17 +19,14 @@
 
 // CMfcClockView
 
-IMPLEMENT_DYNCREATE(CMfcClockView, CView)
+IMPLEMENT_DYNCREATE(CMfcClockView, CWpfView )
 
-BEGIN_MESSAGE_MAP(CMfcClockView, CView)
+BEGIN_MESSAGE_MAP(CMfcClockView, CWpfView )
 	// 標準印刷コマンド
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 	ON_WM_CREATE()
-	ON_WM_SIZE()
-	ON_WM_SETFOCUS()
-	ON_WM_KILLFOCUS()
 END_MESSAGE_MAP()
 
 // CMfcClockView コンストラクション/デストラクション
@@ -69,12 +66,12 @@ void CMfcClockView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 #ifdef _DEBUG
 void CMfcClockView::AssertValid() const
 {
-	CView::AssertValid();
+	CWpfView::AssertValid();
 }
 
 void CMfcClockView::Dump(CDumpContext& dc) const
 {
-	CView::Dump(dc);
+	CWpfView::Dump(dc);
 }
 
 CMfcClockDoc* CMfcClockView::GetDocument() const // デバッグ以外のバージョンはインラインです。
@@ -86,42 +83,41 @@ CMfcClockDoc* CMfcClockView::GetDocument() const // デバッグ以外のバー�
 // CMfcClockView メッセージ ハンドラー
 int CMfcClockView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
-	if( CView::OnCreate( lpCreateStruct ) == -1 )
+	if( CWpfView::OnCreate( lpCreateStruct ) == -1 )
 		return -1;
-	auto source = gcnew System::Windows::Interop::HwndSource( 0, WS_CHILD | WS_VISIBLE, 0,
-															  0, 0, 0, 0,	//	サイズを0,0にしておくと、リサイズに追従する
-															  "WpfClock.Clock", System::IntPtr( m_hWnd ) );
-	//source->RootVisual = gcnew WpfClock::Clock();
-	source->RootVisual = gcnew WpfClock::PhoneButtonsPage();
-	//source->RootVisual = gcnew WpfClock::PhotoListPage();
-	System::Windows::Controls::Page^ page = dynamic_cast<System::Windows::Controls::Page^>(source->RootVisual);
-	if( page != nullptr && page->Background == nullptr )
-	{
-		page->Background = System::Windows::SystemColors::WindowBrush;	//	Windowsの標準背景を強制的に配置(WPFのデフォルトと同じ処理)
-	}
-	WpfClock::PhoneButtonsPage^ buttonsPage = dynamic_cast<WpfClock::PhoneButtonsPage^>(page);
-	if( buttonsPage != nullptr )
-	{
-		buttonsPage->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
-	}
-	SetHwndSource( source );
+	//	RootVisual(WPF上のトップレベルのUIElement)をセットアップする。プログラムごとにユニークな値になるのでここでは定義しない。
+
+	auto rootVisual = SetRootVisual( gcnew WpfClock::Clock() );
+
+	//auto rootVisual = SetRootVisual( gcnew WpfClock::PhoneButtonsPage() );
+	//rootVisual->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
+	
+	//auto rootVisual = SetRootVisual( gcnew WpfClock::PhotoListPage() );
 	return 0;
 }
 void CMfcClockView::OnInitialUpdate()
 {
-	CView::OnInitialUpdate();
-	auto page = dynamic_cast<WpfClock::PhoneButtonsPage^>(GetHwndSource()->RootVisual);
-	if( page != nullptr )
+	CWpfView::OnInitialUpdate();
+	auto phonePage = GetRootVisual<WpfClock::PhoneButtonsPage>();
+	if( phonePage != nullptr )
 	{
-		page->Text = L"";
+		phonePage->Text = L"";
 	}
 }
 #include <msclr\marshal_atl.h>
-void CMfcClockView::OnEnter( System::Object^ sender, System::EventArgs^ e )
+void CMfcClockView::OnEnter( System::Object^ sender, System::EventArgs^ )
 {
+	//	送信元はルートのページなので、そっちをキャストして直接参照する
 	auto page = dynamic_cast<WpfClock::PhoneButtonsPage^>(sender);
 	auto text = msclr::interop::marshal_as<CString>( page->Text );
-	MessageBox( text );
-	page->Text = L"";
+	if( text.IsEmpty() )
+	{
+		AfxMessageBox( _T( "番号を入力してください。" ) );
+	}
+	else
+	{
+		AfxMessageBox( _T( "電話っぽい感じでしょ？\n\n" ) + text, MB_ICONINFORMATION|MB_OK );
+		page->Text = L"";
+	}
 	page->SetDefFocus();
 }

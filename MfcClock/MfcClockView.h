@@ -5,7 +5,8 @@
 #pragma once
 #include "WpfView.h"
 
-#include <msclr/event.h>
+#include <msclr/event.h>	//	イベントハンドラマクロ
+
 class CMfcClockView : public CWpfView
 {
 protected: // シリアル化からのみ作成します。

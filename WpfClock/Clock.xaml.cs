@@ -20,10 +20,15 @@ namespace WpfClock
 		public Clock()
 		{
 			InitializeComponent();
-			Loaded += Clock_Loaded;
 		}
 
-		private void Clock_Loaded( object sender, RoutedEventArgs e )
+		private void OnDayChange( object sender, EventArgs e )
+		{
+			var now = DateTime.Now;
+			DataContext = now.Day.ToString();
+			_dayTimer.Interval = new TimeSpan( 1, 0, 0, 0 );
+		}
+		private void Page_Loaded( object sender, RoutedEventArgs e )
 		{
 			var now = DateTime.Now;
 			DataContext = now.Day.ToString();
@@ -39,13 +44,6 @@ namespace WpfClock
 			var sb = (Storyboard)PodClock.FindResource( "sb" );
 			sb.Begin( PodClock, HandoffBehavior.SnapshotAndReplace, true );
 			sb.Seek( PodClock, now.TimeOfDay, TimeSeekOrigin.BeginTime );
-		}
-
-		private void OnDayChange( object sender, EventArgs e )
-		{
-			var now = DateTime.Now;
-			DataContext = now.Day.ToString();
-			_dayTimer.Interval = new TimeSpan( 1, 0, 0, 0 );
 		}
 	}
 }

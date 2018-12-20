@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,6 +51,24 @@ namespace WpfClock
 			if( handler != null )
 			{
 				handler( this, EventArgs.Empty );
+			}
+		}
+
+		private void Page_SizeChanged( object sender, SizeChangedEventArgs e )
+		{
+			var width = grid.ColumnDefinitions[Grid.GetColumn( EnterButton )].ActualWidth;
+			var height = grid.RowDefinitions[Grid.GetRow( EnterButton )].ActualHeight;
+			Trace.WriteLine( $"Grid.Width={width}" );
+			Trace.WriteLine( $"Grid.Height={height}" );
+			Trace.WriteLine( $"EnterButton.ActualWidth={EnterButton.ActualWidth}" );
+			Trace.WriteLine( $"EnterButton.ActualHeight={EnterButton.ActualHeight}" );
+			if( width > height )
+			{
+				EnterButton.Height = EnterButton.Width = height-2;
+			}
+			else
+			{
+				EnterButton.Height = EnterButton.Width = width-2;
 			}
 		}
 	}

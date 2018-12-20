@@ -4,8 +4,10 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfClock"
-      mc:Ignorable="d" d:DesignHeight="110" d:DesignWidth="110"
-			>
+      mc:Ignorable="d" d:DesignHeight="110" d:DesignWidth="110" Loaded="Page_Loaded"
+			DataContext="10">
+	<!--DataContext は日付文字列をバインドすることで実現-->
+	
 	<!--<Page.Background>
 		<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
 			<GradientStop Color="#fcfcfe" Offset="0" />
