@@ -41,7 +41,7 @@ public:
 			{
 				if( rootVisual->Background == nullptr )
 				{
-					rootVisual->Background = System::Windows::SystemColors::WindowBrush;	//	Windowsの標準背景を強制的に配置(WPFのデフォルトと同じ処理)
+					rootVisual->Background = System::Windows::SystemColors::WindowBrush;	//	Windowsの標準背景を強制的に配置
 				}
 			}
 		}
