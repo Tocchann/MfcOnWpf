@@ -87,11 +87,14 @@ int CMfcClockView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 		return -1;
 	//	RootVisual(WPF上のトップレベルのUIElement)をセットアップする。プログラムごとにユニークな値になるのでここでは定義しない。
 
+	//	時計
 	auto rootVisual = SetRootVisual( gcnew WpfClock::Clock() );
 
+	//	プッシュダイヤルっぽい何か
 	//auto rootVisual = SetRootVisual( gcnew WpfClock::PhoneButtonsPage() );
 	//rootVisual->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
 	
+	//	某書籍のリスト的なもの
 	//auto rootVisual = SetRootVisual( gcnew WpfClock::PhotoListPage() );
 	return 0;
 }
