@@ -30,7 +30,7 @@ public:
 
 public:
 	template<class TYPE>
-	auto SetRootVisual( _In_ TYPE^ rootVisual ) -> decltype(rootVisual)
+	TYPE^ SetRootVisual( _In_ TYPE^ rootVisual )
 	{
 		m_source->RootVisual = rootVisual;
 		//	HwndSource は子ウィンドウクリップスタイルが自動でついてしまうので背景塗りつぶしが必須。
