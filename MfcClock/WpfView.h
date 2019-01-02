@@ -27,7 +27,10 @@ public:
 	CWpfView& operator=( const CWpfView& ) = delete;
 
 	virtual ~CWpfView();
-
+#ifdef _DEBUG
+	virtual void AssertValid() const;
+	virtual void Dump( CDumpContext& dc ) const;
+#endif
 public:
 	template<class TYPE>
 	TYPE^ SetRootVisual( _In_ TYPE^ rootVisual )
@@ -57,16 +60,17 @@ public:
 	//	基本的に触る必要はないはずだけどあえて隠蔽しない形にしておく
 	System::Windows::Interop::HwndSource^ GetHwndSource() const
 	{
-		return m_source;
+		System::Windows::Interop::HwndSource^ val = m_source;
+		_ASSERTE( val );
+		return val;
 	}
 	HWND GetHwndSourceWindow() const
 	{
-		auto src = GetHwndSource();
-		_ASSERTE( src != nullptr );	//	OnCreate で構築しているので存在していないということはないはず
-		return static_cast<HWND>(src->Handle.ToPointer());
+		return m_hwndSource;
 	}
 private:
 	gcroot<System::Windows::Interop::HwndSource^>	m_source;
+	HWND											m_hwndSource;
 // オーバーライド
 public:
 	virtual BOOL PreCreateWindow( CREATESTRUCT& cs );
@@ -79,4 +83,5 @@ public:
 	afx_msg void OnSize( UINT nType, int cx, int cy );
 	afx_msg void OnSetFocus( CWnd* pOldWnd );
 	afx_msg int OnCreate( LPCREATESTRUCT lpCreateStruct );
+	afx_msg void OnDestroy();
 };

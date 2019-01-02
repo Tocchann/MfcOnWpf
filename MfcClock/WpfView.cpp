@@ -8,14 +8,43 @@ BEGIN_MESSAGE_MAP(CWpfView, CView)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	ON_WM_SETFOCUS()
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 CWpfView::CWpfView()
+	:m_hwndSource( nullptr )
 {
 }
 CWpfView::~CWpfView()
 {
 }
+#ifdef _DEBUG
+#include <msclr\marshal_atl.h>
+void CWpfView::AssertValid() const
+{
+	CView::AssertValid();
+	//	HwndSource を構築していないまたは、ウィンドウハンドルが同じ。
+	System::Windows::Interop::HwndSource^ src = m_source;
+	ASSERT( src == nullptr || src->Handle.ToPointer() == m_hwndSource );
+}
+void CWpfView::Dump( CDumpContext& dc ) const
+{
+	CView::Dump( dc );
+	System::Windows::Interop::HwndSource^ src = m_source;
+	if( src != nullptr )
+	{
+		dc << _T( "RootVisual=" );
+		if( src->RootVisual != nullptr )
+		{
+			dc << msclr::interop::marshal_as<CString>( src->RootVisual->GetType()->FullName ) << _T( "\n" );
+		}
+		else
+		{
+			dc << _T( "nullptr\n" );
+		}
+	}
+}
+#endif
 BOOL CWpfView::PreCreateWindow( CREATESTRUCT& cs )
 {
 	//	全面子ウィンドウなので、クリップをかけて無駄を省く(ここ重要！)
@@ -44,20 +73,30 @@ int CWpfView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 		System::IntPtr( m_hWnd ) );				//	親ウィンドウのウィンドウハンドル
 
 	//	配置などはHWNDを使って制御する
-	auto hwnd = GetHwndSourceWindow();
-	if( hwnd == nullptr )
+	m_hwndSource = static_cast<HWND>(m_source->Handle.ToPointer());
+	if( m_hwndSource == nullptr )
 	{
 		return -1;	//	そもそもこの時点でウィンドウは作られているのであとは考慮しない
 	}
-	::SetWindowPos( hwnd, nullptr, 0, 0, lpCreateStruct->cx, lpCreateStruct->cy, SWP_NOZORDER|SWP_NOMOVE|SWP_FRAMECHANGED );
+	::SetWindowPos( m_hwndSource, nullptr, 0, 0, lpCreateStruct->cx, lpCreateStruct->cy, SWP_NOZORDER|SWP_NOMOVE|SWP_FRAMECHANGED );
 	return 0;
+}
+void CWpfView::OnDestroy()
+{
+	m_hwndSource = nullptr;
+	System::Windows::Interop::HwndSource^ nulobj = nullptr;
+	m_source = nulobj;
+	CView::OnDestroy();
 }
 void CWpfView::OnSize( UINT nType, int cx, int cy )
 {
 	CView::OnSize( nType, cx, cy );
 	//	クライアント領域全域にウィンドウをリサイズする
 	auto hwnd = GetHwndSourceWindow();
-	::SetWindowPos( hwnd, nullptr, 0, 0, cx, cy, SWP_NOZORDER|SWP_NOMOVE|SWP_FRAMECHANGED );
+	if( hwnd != nullptr )
+	{
+		::SetWindowPos( hwnd, nullptr, 0, 0, cx, cy, SWP_NOZORDER|SWP_NOMOVE|SWP_FRAMECHANGED );
+	}
 }
 void CWpfView::OnSetFocus( CWnd* pOldWnd )
 {
