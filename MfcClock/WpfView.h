@@ -66,11 +66,16 @@ public:
 	}
 	HWND GetHwndSourceWindow() const
 	{
-		return m_hwndSource;
+		HWND result = nullptr;
+		auto src = GetHwndSource();
+		if( src != nullptr )
+		{
+			result = static_cast<HWND>(m_source->Handle.ToPointer());
+		}
+		return result;
 	}
 private:
 	gcroot<System::Windows::Interop::HwndSource^>	m_source;
-	HWND											m_hwndSource;
 // オーバーライド
 public:
 	virtual BOOL PreCreateWindow( CREATESTRUCT& cs );
@@ -84,4 +89,5 @@ public:
 	afx_msg void OnSetFocus( CWnd* pOldWnd );
 	afx_msg int OnCreate( LPCREATESTRUCT lpCreateStruct );
 	afx_msg void OnDestroy();
+	virtual BOOL PreTranslateMessage( MSG* pMsg );
 };

@@ -48,6 +48,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddrDetailPage.xaml.cs">
+      <DependentUpon>AddrDetailPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Clock.xaml.cs">
       <DependentUpon>Clock.xaml</DependentUpon>
     </Compile>
@@ -80,6 +83,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="AddrDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Clock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

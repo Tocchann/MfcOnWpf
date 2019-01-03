@@ -12,6 +12,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MfcClock", "MfcClock\MfcClo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfClock", "WpfClock\WpfClock.csproj", "{B12507A1-9977-408F-A72E-E7C9998E5AED}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plot", "Plot", "{FFD930DB-62EA-485D-B6AB-CA0A56388CE9}"
+	ProjectSection(SolutionItems) = preProject
+		Plot\plot.md = Plot\plot.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +52,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FFD930DB-62EA-485D-B6AB-CA0A56388CE9} = {8933E4B1-5F19-47FB-A147-E6321EEF1D70}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1F3419F7-5835-43DB-A91D-A90632E0FAEC}
