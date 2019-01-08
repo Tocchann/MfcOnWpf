@@ -58,7 +58,6 @@ void CWpfView::OnDraw( CDC* )
 {
 	//	‘S–Ê“\‚è•t‚¯‚È‚Ì‚ÅAÀ‘•‰B‚Ø‚¢‚¾‚¯‚Å‚¢‚¢
 }
-#include <msclr/marshal_windows.h>
 BOOL CWpfView::PreTranslateMessage( MSG* pMsg )
 {
 	if( CView::PreTranslateMessage( pMsg ) )
@@ -85,6 +84,10 @@ BOOL CWpfView::PreTranslateMessage( MSG* pMsg )
 		auto inputSinks = src->ChildKeyboardInputSinks;
 		for each( auto sink in inputSinks )
 		{
+//System::Windows::Input::ModifierKeys::Alt
+//System::Windows::Input::ModifierKeys::Control
+//System::Windows::Input::ModifierKeys::Shift
+//System::Windows::Input::ModifierKeys::Windows
 			#undef TranslateAccelerator
 			if( sink->TranslateAccelerator( msg, System::Windows::Input::ModifierKeys::None ) )
 			{
