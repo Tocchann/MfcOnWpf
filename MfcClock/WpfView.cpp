@@ -5,10 +5,10 @@
 IMPLEMENT_DYNAMIC(CWpfView, CView)
 
 BEGIN_MESSAGE_MAP(CWpfView, CView)
-	ON_WM_CREATE()
 	ON_WM_DESTROY()
 	ON_WM_SIZE()
 	ON_WM_SETFOCUS()
+	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 CWpfView::CWpfView()
@@ -57,32 +57,55 @@ void CWpfView::OnDraw( CDC* )
 {
 	//	全面貼り付けなので、実装隠ぺいだけでいい
 }
-
-int CWpfView::OnCreate( LPCREATESTRUCT lpCreateStruct )
+BOOL CWpfView::OnEraseBkgnd( CDC* pDC )
 {
-	if( CView::OnCreate( lpCreateStruct ) == -1 )
-		return -1;
-
-	//	クライアント領域全体をWPFウィンドウで占める形で用意する。
-	//	非クライアント部分は CView がまかなうのでボーダーの内側のみ考慮すればよい
-	//	HwndSource そのものを gcroot で保持することで確実にキープする(HWNDを持ってるだけじゃ意味がない)
-	m_source = gcnew System::Windows::Interop::HwndSource( 
-		0,										//	子ウィンドウのClassStyle
-		WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN,	//	子ウィンドウスタイル
-		0,										//	子ウィンドウの拡張スタイル
-		0, 0, 0, 0,								//	WPFコントロール配置する領域(x,y, cx, cy) cx,cy が0の場合このウィンドウの領域に追従する
-		"CWpfView::HwndSource",					//	子ウィンドウなのでウィンドウタイトルは見えない。わかりやすくするための検索向けのテキスト
-		System::IntPtr( m_hWnd ) );				//	親ウィンドウのウィンドウハンドル
-
-	//	配置などはHWNDを使って制御する
-	auto hwnd = GetHwndSourceWindow();
-	if( hwnd == nullptr )
+	if( GetHwndSource() == nullptr )
 	{
-		return -1;	//	そもそもこの時点でウィンドウは作られているのであとは考慮しない
+		CBrush* pbr = CBrush::FromHandle( GetSysColorBrush( COLOR_BTNFACE ) );
+		if( pbr != nullptr )
+		{
+			CRect rc;
+			pDC->GetClipBox( &rc );
+			TRACE( _T( "OnEraseBkgnd::GetClipBox():{%d,%d,%d,%d}\n" ), rc.left, rc.top, rc.right, rc.bottom );
+			pDC->FillRect( &rc, pbr );
+			return TRUE;
+		}
 	}
-	//	どこにあるかわからないので完全再配置
-	::SetWindowPos( hwnd, nullptr, 0, 0, lpCreateStruct->cx, lpCreateStruct->cy, SWP_NOZORDER|SWP_FRAMECHANGED );
-	return 0;
+	return CView::OnEraseBkgnd( pDC );
+}
+System::Windows::Interop::HwndSource^ CWpfView::CreateHwndSource()
+{
+	_ASSERTE( m_hWnd != nullptr );	//	ウィンドウを作る前に呼び出しても処理できないのでアサーションする
+	if( m_hWnd == nullptr )
+	{
+		return nullptr;
+	}
+	System::Windows::Interop::HwndSource^ val = m_source;
+	if( val == nullptr )
+	{
+		//	クライアント領域全体をWPFウィンドウで占める形で用意する。
+		//	非クライアント部分は CView がまかなうのでボーダーの内側のみ考慮すればよい
+		//	HwndSource そのものを gcroot で保持することで確実にキープする(HWNDを持ってるだけじゃ意味がない)
+		m_source = gcnew System::Windows::Interop::HwndSource(
+			0,										//	子ウィンドウのClassStyle
+			WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN,	//	子ウィンドウスタイル
+			0,										//	子ウィンドウの拡張スタイル
+			0, 0, 0, 0,								//	WPFコントロール配置する領域(x,y, cx, cy) cx,cy が0の場合このウィンドウの領域に追従する
+			"CWpfView::HwndSource",					//	子ウィンドウなのでウィンドウタイトルは見えない。わかりやすくするための検索向けのテキスト
+			System::IntPtr( m_hWnd ) );				//	親ウィンドウのウィンドウハンドル
+
+		//	配置などはHWNDを使って制御する
+		auto hwnd = GetHwndSourceWindow();
+		if( hwnd == nullptr )
+		{
+			return nullptr;
+		}
+		CRect rc;
+		GetClientRect( &rc );
+		//	全面貼り付け
+		::SetWindowPos( hwnd, nullptr, 0, 0, rc.right, rc.bottom, SWP_NOZORDER|SWP_FRAMECHANGED );
+	}
+	return GetHwndSource();
 }
 void CWpfView::OnDestroy()
 {
@@ -107,5 +130,8 @@ void CWpfView::OnSetFocus( CWnd* pOldWnd )
 	CView::OnSetFocus( pOldWnd );
 	//	子ウィンドウにフォーカスを受け渡す(フォーカスを受け取る==ウィンドウが表示されている)
 	auto hwnd = GetHwndSourceWindow();
-	::SetFocus( hwnd );
+	if( hwnd != nullptr )
+	{
+		::SetFocus( hwnd );
+	}
 }

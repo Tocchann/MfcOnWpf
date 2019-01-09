@@ -95,15 +95,16 @@ int CMfcClockView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	//rootVisual->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
 	
 	//	某書籍のリスト的なもの
-	//auto rootVisual = SetRootVisual( gcnew WpfClock::PhotoListPage() );
+	auto rootVisual = SetRootVisual( gcnew WpfClock::PhotoListPage() );
 
 	//	どこぞの住所録っぽいもの
-	auto rootVisual = SetRootVisual( gcnew WpfClock::AddrDetailPage() );
+	//auto rootVisual = SetRootVisual( gcnew WpfClock::AddrDetailPage() );
 	return 0;
 }
 void CMfcClockView::OnInitialUpdate()
 {
 	CWpfView::OnInitialUpdate();
+
 	auto phonePage = GetRootVisual<WpfClock::PhoneButtonsPage>();
 	if( phonePage != nullptr )
 	{
