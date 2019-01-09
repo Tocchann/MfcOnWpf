@@ -1,19 +1,18 @@
-//	CView 領域全面に WPF の UIElement を配置する CWpfView
+//	CView 領域全面に WPF の Visual を配置する CWpfView
 
 #pragma once
 
+//	WPF の貼り付けが前提なので、/clr は必須扱いとする(少なくともこのヘッダーを参照するところは...)
 #ifndef __cplusplus_cli
 	#error WPF support requires /clr (does not support oldSyntax)
 #endif
+#include <msclr\gcroot.h>
 
-//	参照設定していない場合でもコンパイル時取り込みするようにしておく
+//	HwndSource を保持するために最低限必要なもののみ定義する
 #using <mscorlib.dll>
 #using <PresentationCore.dll>
-#using <WindowsBase.dll>
 #using <PresentationFramework.dll>
-#using <System.dll>
-#using <System.Xaml.dll>
-
+#using <WindowsBase.dll>
 
 class CWpfView : public CView
 {
@@ -32,6 +31,15 @@ public:
 	virtual void Dump( CDumpContext& dc ) const;
 #endif
 public:
+	//	ビューの物理的内容にアクセスする部分については、外部参照も可能にする
+	template<class TYPE>
+	TYPE^ GetRootVisual() const
+	{
+		auto src = GetHwndSource();
+		return dynamic_cast<TYPE^>((src != nullptr) ? src->RootVisual : nullptr);
+	}
+protected:
+	//	初期化処理に当たる部分なので、派生クラス側で面倒を見るものとする。
 	template<class TYPE>
 	TYPE^ SetRootVisual( _In_ TYPE^ rootVisual )
 	{
@@ -52,13 +60,7 @@ public:
 		}
 		return rootVisual;
 	}
-	template<class TYPE>
-	TYPE^ GetRootVisual() const
-	{
-		auto src = GetHwndSource();
-		return dynamic_cast<TYPE^>((src != nullptr) ? src->RootVisual : nullptr);
-	}
-	//	基本的に触る必要はないはずだけどあえて隠蔽しない形にしておく
+	//	基本的に触る必要はないはずなので、protected で定義する
 	System::Windows::Interop::HwndSource^ GetHwndSource() const
 	{
 		System::Windows::Interop::HwndSource^ val = m_source;
@@ -74,9 +76,10 @@ public:
 		}
 		return result;
 	}
+	//	WPFオブジェクトをホストするための HwndSource の構築(自動で構築するので通常参照しない)
 	System::Windows::Interop::HwndSource^ CreateHwndSource();
 private:
-	gcroot<System::Windows::Interop::HwndSource^>	m_source;
+	msclr::gcroot<System::Windows::Interop::HwndSource^>	m_source;
 // オーバーライド
 public:
 	virtual BOOL PreCreateWindow( CREATESTRUCT& cs );

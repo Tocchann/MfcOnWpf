@@ -1,24 +1,43 @@
 ﻿# セッションタイトル
 
-CView にも UIElementを！
+CView にも UIElement を！
 
 今日話すこと。
 
-* CView の派生クラスを作って、WPF の Visual オブジェクトを張り付けるようビュークラスを作る時に考えておくこと。
+* ざっくりと Forms との違い
+* MFC アプリの CView 部分に、WPF の Visual オブジェクトを貼り付けてみる
+* 多分唯一の問題点(というか実装仕様として定着してるとみるべきもの。。。)
+* まとめ
 
-今日話さないこと。
+## Windows Forms との主な違い
 
-* TAB移動やニーモニック処理などのキーボード処理回り
+* .NET Framework 側で完結する形でフォローがあるかどうか。
+  * WPFはフォローあり
+  * WinForms はフォローなし。
+    * Win32 からは、ActiveXコントロールチックに扱う(実際内部処理はそっくり)
 
+## Windows Forms をビューとして使う
 
+* MFC のサポートがある
+  * アプリケーションクラスのコンストラクタで System::Windows::Forms::Application::SetUnhandledExceptionMode(System::Windows::Forms::UnhandledExceptionMode::ThrowException); を呼び出す
+* class CWinFormsView を利用。
+  * コンストラクタにビューに張り付けるFormクラスの型をセットするだけ。
+* mfcmifc80.dll を参照する必要がある。
+  * MFCのライブラリフォルダにある
+    * ローカルに参照
+    * ローカルコピー
+    * ローカルインストール
+      * .NET Framework には含まれない
+      * VCランタイムには含まれない
 
-## ポイントをどこに置く？
+## WPF をビューとして使う
 
-MFC でサポートしている .NET Framework のGUIライブラリは Windows Forms。
+* System::Windows::Interop::HwndSource を全面貼り付け
+  * 子ウィンドウとして設定する
+    * リサイズは親側で対応
+    * フォーカスは全面譲渡
 
-WPF については直接サポートしていない。
-
-## Windows Forms の貼り付け
+## 実際に使ってみる!
 
 MFC のサポートする Windows Forms のクラス群。  
 .NET Framework 2.0 の時に C++/CLI の機能として追加。  
@@ -77,10 +96,8 @@ MFC の CView レイヤー部分を丸ごと置き換える形で張り付ける
 
 ```Text
 CMainFrame
- +CToolBar
- +CWpfView(CView派生)
-  +System::Windows::Interop::HwndSource
-   +RootVisual(UIElement)
- +CStatusBar
++CWpfView(CView派生)
+ +System::Windows::Interop::HwndSource
+  +RootVisual(UIElement)
 ```
 

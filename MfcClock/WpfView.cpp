@@ -48,30 +48,11 @@ void CWpfView::Dump( CDumpContext& dc ) const
 #endif
 BOOL CWpfView::PreCreateWindow( CREATESTRUCT& cs )
 {
+	//cs.style &= ~WS_BORDER;
 	//	全面子ウィンドウなので、クリップをかけて無駄を省く(ここ重要！)
 	auto result = CView::PreCreateWindow( cs );
 	cs.style |= WS_CLIPCHILDREN;
 	return result;
-}
-void CWpfView::OnDraw( CDC* )
-{
-	//	全面貼り付けなので、実装隠ぺいだけでいい
-}
-BOOL CWpfView::OnEraseBkgnd( CDC* pDC )
-{
-	if( GetHwndSource() == nullptr )
-	{
-		CBrush* pbr = CBrush::FromHandle( GetSysColorBrush( COLOR_BTNFACE ) );
-		if( pbr != nullptr )
-		{
-			CRect rc;
-			pDC->GetClipBox( &rc );
-			TRACE( _T( "OnEraseBkgnd::GetClipBox():{%d,%d,%d,%d}\n" ), rc.left, rc.top, rc.right, rc.bottom );
-			pDC->FillRect( &rc, pbr );
-			return TRUE;
-		}
-	}
-	return CView::OnEraseBkgnd( pDC );
 }
 System::Windows::Interop::HwndSource^ CWpfView::CreateHwndSource()
 {
@@ -106,6 +87,26 @@ System::Windows::Interop::HwndSource^ CWpfView::CreateHwndSource()
 		::SetWindowPos( hwnd, nullptr, 0, 0, rc.right, rc.bottom, SWP_NOZORDER|SWP_FRAMECHANGED );
 	}
 	return GetHwndSource();
+}
+void CWpfView::OnDraw( CDC* )
+{
+	//	全面貼り付けなので、実装隠ぺいだけでいい
+}
+BOOL CWpfView::OnEraseBkgnd( CDC* pDC )
+{
+	if( GetHwndSource() == nullptr )
+	{
+		CBrush* pbr = CBrush::FromHandle( GetSysColorBrush( COLOR_BTNFACE ) );
+		if( pbr != nullptr )
+		{
+			CRect rc;
+			pDC->GetClipBox( &rc );
+			TRACE( _T( "OnEraseBkgnd::GetClipBox():{%d,%d,%d,%d}\n" ), rc.left, rc.top, rc.right, rc.bottom );
+			pDC->FillRect( &rc, pbr );
+			return TRUE;
+		}
+	}
+	return CView::OnEraseBkgnd( pDC );
 }
 void CWpfView::OnDestroy()
 {
