@@ -1,15 +1,14 @@
 #include "stdafx.h"
 
 #include "WpfView.h"
-#include <msclr/event.h>
 
 IMPLEMENT_DYNAMIC(CWpfView, CView)
 
 BEGIN_MESSAGE_MAP(CWpfView, CView)
 	ON_WM_CREATE()
+	ON_WM_DESTROY()
 	ON_WM_SIZE()
 	ON_WM_SETFOCUS()
-	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 CWpfView::CWpfView()
@@ -58,45 +57,6 @@ void CWpfView::OnDraw( CDC* )
 {
 	//	全面貼り付けなので、実装隠ぺいだけでいい
 }
-BOOL CWpfView::PreTranslateMessage( MSG* pMsg )
-{
-	if( CView::PreTranslateMessage( pMsg ) )
-	{
-		return TRUE;
-	}
-	auto src = GetHwndSource();
-	if( src != nullptr )
-	{
-		System::Windows::Interop::MSG msg;
-		msg.hwnd = System::IntPtr( pMsg->hwnd );
-		msg.message = pMsg->message;
-#ifdef _WIN64
-		msg.wParam = System::IntPtr( (long long)pMsg->wParam );
-		msg.lParam = System::IntPtr( (long long)pMsg->lParam );
-#else
-		msg.wParam = System::IntPtr( (int)pMsg->wParam );
-		msg.lParam = System::IntPtr( (int)pMsg->lParam );
-#endif
-		msg.pt_x = pMsg->pt.x;
-		msg.pt_y = pMsg->pt.y;
-		msg.time = pMsg->time;
-
-		auto inputSinks = src->ChildKeyboardInputSinks;
-		for each( auto sink in inputSinks )
-		{
-//System::Windows::Input::ModifierKeys::Alt
-//System::Windows::Input::ModifierKeys::Control
-//System::Windows::Input::ModifierKeys::Shift
-//System::Windows::Input::ModifierKeys::Windows
-			#undef TranslateAccelerator
-			if( sink->TranslateAccelerator( msg, System::Windows::Input::ModifierKeys::None ) )
-			{
-				return TRUE;
-			}
-		}
-	}
-	return FALSE;
-}
 
 int CWpfView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
@@ -111,7 +71,7 @@ int CWpfView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 		WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN,	//	子ウィンドウスタイル
 		0,										//	子ウィンドウの拡張スタイル
 		0, 0, 0, 0,								//	WPFコントロール配置する領域(x,y, cx, cy) cx,cy が0の場合このウィンドウの領域に追従する
-		"CWpfView::HwndSource",					//	子ウィンドウなのでウィンドウタイトルは見えない。
+		"CWpfView::HwndSource",					//	子ウィンドウなのでウィンドウタイトルは見えない。わかりやすくするための検索向けのテキスト
 		System::IntPtr( m_hWnd ) );				//	親ウィンドウのウィンドウハンドル
 
 	//	配置などはHWNDを使って制御する
@@ -120,13 +80,12 @@ int CWpfView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	{
 		return -1;	//	そもそもこの時点でウィンドウは作られているのであとは考慮しない
 	}
-	::SetWindowPos( hwnd, nullptr, 0, 0, lpCreateStruct->cx, lpCreateStruct->cy, SWP_NOZORDER|SWP_NOMOVE|SWP_FRAMECHANGED );
+	//	どこにあるかわからないので完全再配置
+	::SetWindowPos( hwnd, nullptr, 0, 0, lpCreateStruct->cx, lpCreateStruct->cy, SWP_NOZORDER|SWP_FRAMECHANGED );
 	return 0;
 }
 void CWpfView::OnDestroy()
 {
-	ASSERT_VALID( this );
-	AFXDUMP( this );
 	System::Windows::Interop::HwndSource^ nulobj = nullptr;
 	m_source = nulobj;
 	CView::OnDestroy();
@@ -135,7 +94,7 @@ void CWpfView::OnSize( UINT nType, int cx, int cy )
 {
 	CView::OnSize( nType, cx, cy );
 	ASSERT_VALID( this );
-	//	クライアント領域全域にウィンドウをリサイズする
+	//	クライアント領域全域にウィンドウをリサイズする(原点は初期設定でそろえているので、サイズだけ変更)
 	auto hwnd = GetHwndSourceWindow();
 	if( hwnd != nullptr )
 	{
@@ -146,7 +105,7 @@ void CWpfView::OnSetFocus( CWnd* pOldWnd )
 {
 	ASSERT_VALID( this );
 	CView::OnSetFocus( pOldWnd );
-	//	子ウィンドウにフォーカスを受け渡す
+	//	子ウィンドウにフォーカスを受け渡す(フォーカスを受け取る==ウィンドウが表示されている)
 	auto hwnd = GetHwndSourceWindow();
 	::SetFocus( hwnd );
 }

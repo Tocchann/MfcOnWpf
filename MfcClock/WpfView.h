@@ -89,5 +89,4 @@ public:
 	afx_msg void OnSetFocus( CWnd* pOldWnd );
 	afx_msg int OnCreate( LPCREATESTRUCT lpCreateStruct );
 	afx_msg void OnDestroy();
-	virtual BOOL PreTranslateMessage( MSG* pMsg );
 };
