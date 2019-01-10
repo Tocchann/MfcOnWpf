@@ -96,7 +96,7 @@ int CMfcClockView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	//rootVisual->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
 	
 	//	某書籍のリスト的なもの
-	//auto rootVisual = SetRootVisual( gcnew WpfClock::PhotoListPage() );
+	auto rootVisual = SetRootVisual( gcnew WpfClock::PhotoListPage() );
 
 	//	どこぞの住所録っぽいもの
 	//auto rootVisual = SetRootVisual( gcnew WpfClock::AddrDetailPage() );
