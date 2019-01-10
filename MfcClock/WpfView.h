@@ -16,16 +16,17 @@
 
 class CWpfView : public CView
 {
+	DECLARE_DYNAMIC( CWpfView )
 protected:
 	CWpfView();
-	DECLARE_DYNAMIC(CWpfView)
 
-// 実装
-public:
+	//	CView はコピー不可なので明示的に止める
 	CWpfView( const CWpfView& ) = delete;
 	CWpfView& operator=( const CWpfView& ) = delete;
 
-	virtual ~CWpfView();
+// 実装
+public:
+	virtual ~CWpfView() = 0;	//	直接利用は認めない！
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump( CDumpContext& dc ) const;

@@ -94,14 +94,14 @@ void CWpfView::OnDraw( CDC* )
 }
 BOOL CWpfView::OnEraseBkgnd( CDC* pDC )
 {
+	//	WPFコントロールを張り付けていない場合は、グレーアウトした状態で表示する(なんとなく見せしめ？)
 	if( GetHwndSource() == nullptr )
 	{
-		CBrush* pbr = CBrush::FromHandle( GetSysColorBrush( COLOR_BTNFACE ) );
+		CBrush* pbr = CBrush::FromHandle( GetSysColorBrush( COLOR_APPWORKSPACE ) );
 		if( pbr != nullptr )
 		{
 			CRect rc;
 			pDC->GetClipBox( &rc );
-			TRACE( _T( "OnEraseBkgnd::GetClipBox():{%d,%d,%d,%d}\n" ), rc.left, rc.top, rc.right, rc.bottom );
 			pDC->FillRect( &rc, pbr );
 			return TRUE;
 		}

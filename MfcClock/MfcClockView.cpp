@@ -99,7 +99,7 @@ int CMfcClockView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	//auto rootVisual = SetRootVisual( gcnew WpfClock::PhotoListPage() );
 
 	//	どこぞの住所録っぽいもの
-	auto rootVisual = SetRootVisual( gcnew WpfClock::AddrDetailPage() );
+	//auto rootVisual = SetRootVisual( gcnew WpfClock::AddrDetailPage() );
 	return 0;
 }
 void CMfcClockView::OnInitialUpdate()
