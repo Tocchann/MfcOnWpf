@@ -60,6 +60,9 @@
     <Compile Include="PhotoListPage.xaml.cs">
       <DependentUpon>PhotoListPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PopupClock.xaml.cs">
+      <DependentUpon>PopupClock.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -96,6 +99,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PhotoListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PopupClock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

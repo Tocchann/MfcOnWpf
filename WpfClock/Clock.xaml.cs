@@ -13,9 +13,6 @@ namespace WpfClock
 	/// </summary>
 	public partial class Clock : Page
 	{
-		const int WS_CHILD = 0x40000000;
-		const int WS_VISIBLE = 0x10000000;
-
 		private DispatcherTimer _dayTimer;
 		public Clock()
 		{

@@ -48,6 +48,17 @@ protected:
 public:
 	afx_msg int OnCreate( LPCREATESTRUCT lpCreateStruct );
 	virtual void OnInitialUpdate();
+	afx_msg void OnPopup();
+	afx_msg void OnUpdateNone( CCmdUI *pCmdUI );
+	afx_msg void OnUpdateClock( CCmdUI *pCmdUI );
+	afx_msg void OnUpdatePhone( CCmdUI *pCmdUI );
+	afx_msg void OnUpdateListbox( CCmdUI *pCmdUI );
+	afx_msg void OnUpdateAddr( CCmdUI *pCmdUI );
+	afx_msg void OnNone();
+	afx_msg void OnClock();
+	afx_msg void OnPhone();
+	afx_msg void OnListbox();
+	afx_msg void OnAddr();
 };
 
 #ifndef _DEBUG  // MfcClockView.cpp のデバッグ バージョン

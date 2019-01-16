@@ -101,8 +101,7 @@ BOOL CWpfView::OnEraseBkgnd( CDC* pDC )
 void CWpfView::OnDestroy()
 {
 	// gcroot<T> には reset メソッドがないので、参照を解除するため null をセットする(Viewは自動的に削除されるので必要はないが...)
-	System::Windows::Interop::HwndSource^ nulobj = nullptr;
-	m_source = nulobj;
+	DestroyHwndSource();
 	CView::OnDestroy();
 }
 void CWpfView::OnSize( UINT nType, int cx, int cy )

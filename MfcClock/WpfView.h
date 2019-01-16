@@ -75,6 +75,16 @@ protected:
 	}
 	//	WPFオブジェクトをホストするための HwndSource の構築(自動で構築するので通常参照しない)
 	System::Windows::Interop::HwndSource^ CreateHwndSource();
+	void DestroyHwndSource()
+	{
+		auto hwnd = GetHwndSourceWindow();
+		if( hwnd != nullptr )
+		{
+			::ShowWindow( hwnd, SW_HIDE );
+			Invalidate();
+		}
+		m_source = nullptr;
+	}
 private:
 	msclr::gcroot<System::Windows::Interop::HwndSource^>	m_source;
 // オーバーライド

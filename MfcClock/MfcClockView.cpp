@@ -27,6 +27,17 @@ BEGIN_MESSAGE_MAP(CMfcClockView, CWpfView )
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 	ON_WM_CREATE()
+	ON_COMMAND( ID_POPUP, &CMfcClockView::OnPopup )
+	ON_UPDATE_COMMAND_UI( ID_NONE, &CMfcClockView::OnUpdateNone )
+	ON_UPDATE_COMMAND_UI( ID_CLOCK, &CMfcClockView::OnUpdateClock )
+	ON_UPDATE_COMMAND_UI( ID_PHONE, &CMfcClockView::OnUpdatePhone )
+	ON_UPDATE_COMMAND_UI( ID_LISTBOX, &CMfcClockView::OnUpdateListbox )
+	ON_UPDATE_COMMAND_UI( ID_ADDR, &CMfcClockView::OnUpdateAddr )
+	ON_COMMAND( ID_NONE, &CMfcClockView::OnNone )
+	ON_COMMAND( ID_CLOCK, &CMfcClockView::OnClock )
+	ON_COMMAND( ID_PHONE, &CMfcClockView::OnPhone )
+	ON_COMMAND( ID_LISTBOX, &CMfcClockView::OnListbox )
+	ON_COMMAND( ID_ADDR, &CMfcClockView::OnAddr )
 END_MESSAGE_MAP()
 
 // CMfcClockView コンストラクション/デストラクション
@@ -96,7 +107,7 @@ int CMfcClockView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	//rootVisual->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
 	
 	//	某書籍のリスト的なもの
-	auto rootVisual = SetRootVisual( gcnew WpfClock::PhotoListPage() );
+	//auto rootVisual = SetRootVisual( gcnew WpfClock::PhotoListPage() );
 
 	//	どこぞの住所録っぽいもの
 	//auto rootVisual = SetRootVisual( gcnew WpfClock::AddrDetailPage() );
@@ -128,4 +139,56 @@ void CMfcClockView::OnEnter( System::Object^ sender, System::EventArgs^ )
 		page->Text = L"";
 	}
 	page->SetDefFocus();
+}
+void CMfcClockView::OnPopup()
+{
+	//	ホストオーナーをセットしたうえで、ポップアップウィンドウをダイアログ表示する(ここでは戻り値は受け取らない)
+	auto window = gcnew WpfClock::PopupClock();
+	auto helper = gcnew System::Windows::Interop::WindowInteropHelper( window );
+	helper->Owner = System::IntPtr( AfxGetMainWnd()->GetSafeHwnd() );
+	window->ShowDialog();
+}
+void CMfcClockView::OnUpdateNone( CCmdUI *pCmdUI )
+{
+	auto src = GetHwndSource();
+	pCmdUI->SetCheck( (src == nullptr || src->RootVisual == nullptr) ? TRUE : FALSE );
+}
+void CMfcClockView::OnNone()
+{
+	DestroyHwndSource();
+}
+void CMfcClockView::OnUpdateClock( CCmdUI *pCmdUI )
+{
+	pCmdUI->SetCheck( (GetRootVisual<WpfClock::Clock>() != nullptr) ? TRUE : FALSE );
+}
+void CMfcClockView::OnClock()
+{
+	SetRootVisual( gcnew WpfClock::Clock() );
+}
+
+void CMfcClockView::OnUpdatePhone( CCmdUI *pCmdUI )
+{
+	pCmdUI->SetCheck( (GetRootVisual<WpfClock::PhoneButtonsPage>() != nullptr) ? TRUE : FALSE );
+}
+void CMfcClockView::OnPhone()
+{
+	// TODO: ここにコマンド ハンドラー コードを追加します。
+	auto rootVisual = SetRootVisual( gcnew WpfClock::PhoneButtonsPage() );
+	rootVisual->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
+}
+void CMfcClockView::OnUpdateListbox( CCmdUI *pCmdUI )
+{
+	pCmdUI->SetCheck( (GetRootVisual<WpfClock::PhotoListPage>() != nullptr) ? TRUE : FALSE );
+}
+void CMfcClockView::OnListbox()
+{
+	SetRootVisual( gcnew WpfClock::PhotoListPage() );
+}
+void CMfcClockView::OnUpdateAddr( CCmdUI *pCmdUI )
+{
+	pCmdUI->SetCheck( (GetRootVisual<WpfClock::AddrDetailPage>() != nullptr) ? TRUE : FALSE );
+}
+void CMfcClockView::OnAddr()
+{
+	SetRootVisual( gcnew WpfClock::AddrDetailPage() );
 }
