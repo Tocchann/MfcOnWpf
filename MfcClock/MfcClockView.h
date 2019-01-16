@@ -46,7 +46,6 @@ public:
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg int OnCreate( LPCREATESTRUCT lpCreateStruct );
 	virtual void OnInitialUpdate();
 	afx_msg void OnPopup();
 	afx_msg void OnUpdateNone( CCmdUI *pCmdUI );

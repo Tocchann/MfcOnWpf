@@ -26,7 +26,6 @@ BEGIN_MESSAGE_MAP(CMfcClockView, CWpfView )
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
-	ON_WM_CREATE()
 	ON_COMMAND( ID_POPUP, &CMfcClockView::OnPopup )
 	ON_UPDATE_COMMAND_UI( ID_NONE, &CMfcClockView::OnUpdateNone )
 	ON_UPDATE_COMMAND_UI( ID_CLOCK, &CMfcClockView::OnUpdateClock )
@@ -92,30 +91,14 @@ CMfcClockDoc* CMfcClockView::GetDocument() const // デバッグ以外のバー�
 }
 #endif //_DEBUG
 // CMfcClockView メッセージ ハンドラー
-int CMfcClockView::OnCreate( LPCREATESTRUCT lpCreateStruct )
-{
-	if( CWpfView::OnCreate( lpCreateStruct ) == -1 )
-		return -1;
-
-	//	RootVisual(WPF上のトップレベルのUIElement)をセットアップする。プログラムごとにユニークな値になるのでここでは定義しない。
-
-	//	時計
-	//auto rootVisual = SetRootVisual( gcnew WpfClock::Clock() );
-
-	//	プッシュダイヤルっぽい何か
-	//auto rootVisual = SetRootVisual( gcnew WpfClock::PhoneButtonsPage() );
-	//rootVisual->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
-	
-	//	某書籍のリスト的なもの
-	//auto rootVisual = SetRootVisual( gcnew WpfClock::PhotoListPage() );
-
-	//	どこぞの住所録っぽいもの
-	//auto rootVisual = SetRootVisual( gcnew WpfClock::AddrDetailPage() );
-	return 0;
-}
 void CMfcClockView::OnInitialUpdate()
 {
 	CWpfView::OnInitialUpdate();
+
+	//	通常はここで一度だけ初期化する
+	//if( GetHwndSource() == nullptr )
+	//{
+	//}
 
 	auto phonePage = GetRootVisual<WpfClock::PhoneButtonsPage>();
 	if( phonePage != nullptr )
