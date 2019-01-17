@@ -114,8 +114,8 @@ void CMfcClockView::OnNonOwnerPopup()
 }
 void CMfcClockView::OnPopup()
 {
-	//	ホストオーナーをセットしたうえで、ポップアップウィンドウをダイアログ表示する(ここでは戻り値は受け取らない)
 	auto window = gcnew WpfClock::PopupClock();
+	//	オーナーウィンドウをセット
 	auto helper = gcnew System::Windows::Interop::WindowInteropHelper( window );
 	helper->Owner = System::IntPtr( AfxGetMainWnd()->GetSafeHwnd() );
 	window->ShowDialog();
