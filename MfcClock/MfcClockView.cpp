@@ -37,6 +37,7 @@ BEGIN_MESSAGE_MAP(CMfcClockView, CWpfView )
 	ON_COMMAND( ID_PHONE, &CMfcClockView::OnPhone )
 	ON_COMMAND( ID_LISTBOX, &CMfcClockView::OnListbox )
 	ON_COMMAND( ID_ADDR, &CMfcClockView::OnAddr )
+	ON_COMMAND( ID_NON_OWNER_POPUP, &CMfcClockView::OnNonOwnerPopup )
 END_MESSAGE_MAP()
 
 // CMfcClockView コンストラクション/デストラクション
@@ -105,6 +106,11 @@ void CMfcClockView::OnInitialUpdate()
 	{
 		phonePage->Text = L"";
 	}
+}
+void CMfcClockView::OnNonOwnerPopup()
+{
+	auto window = gcnew WpfClock::PopupClock();
+	window->ShowDialog();
 }
 void CMfcClockView::OnPopup()
 {

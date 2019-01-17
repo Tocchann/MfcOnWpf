@@ -58,6 +58,7 @@ public:
 	afx_msg void OnPhone();
 	afx_msg void OnListbox();
 	afx_msg void OnAddr();
+	afx_msg void OnNonOwnerPopup();
 };
 
 #ifndef _DEBUG  // MfcClockView.cpp のデバッグ バージョン
