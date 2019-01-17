@@ -22,7 +22,7 @@ CWpfView::~CWpfView()
 void CWpfView::AssertValid() const
 {
 	CView::AssertValid();
-	//	HwndSource を構築していないまたは、ウィンドウハンドルが同じ。
+	//	HwndSource を構築していないまたは、ウィンドウハンドルがある
 	System::Windows::Interop::HwndSource^ src = m_source;
 	ASSERT( src == nullptr || src->Handle.ToPointer() != nullptr );
 }
@@ -100,7 +100,7 @@ BOOL CWpfView::OnEraseBkgnd( CDC* pDC )
 }
 void CWpfView::OnDestroy()
 {
-	// gcroot<T> には reset メソッドがないので、参照を解除するため null をセットする(Viewは自動的に削除されるので必要はないが...)
+	// 動的に削除ができるようにしたので、Window破棄のタイミングで合わせてオブジェクトの参照も解除する
 	DestroyHwndSource();
 	CView::OnDestroy();
 }

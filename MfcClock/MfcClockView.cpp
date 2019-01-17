@@ -106,6 +106,44 @@ void CMfcClockView::OnInitialUpdate()
 		phonePage->Text = L"";
 	}
 }
+void CMfcClockView::OnPopup()
+{
+	//	ホストオーナーをセットしたうえで、ポップアップウィンドウをダイアログ表示する(ここでは戻り値は受け取らない)
+	auto window = gcnew WpfClock::PopupClock();
+	auto helper = gcnew System::Windows::Interop::WindowInteropHelper( window );
+	helper->Owner = System::IntPtr( AfxGetMainWnd()->GetSafeHwnd() );
+	window->ShowDialog();
+}
+//	何もない状態
+void CMfcClockView::OnUpdateNone( CCmdUI *pCmdUI )
+{
+	auto src = GetHwndSource();
+	pCmdUI->SetCheck( (src == nullptr || src->RootVisual == nullptr) ? TRUE : FALSE );
+}
+void CMfcClockView::OnNone()
+{
+	DestroyHwndSource();
+}
+//	アナログ時計
+void CMfcClockView::OnUpdateClock( CCmdUI *pCmdUI )
+{
+	pCmdUI->SetCheck( (GetRootVisual<WpfClock::Clock>() != nullptr) ? TRUE : FALSE );
+}
+void CMfcClockView::OnClock()
+{
+	SetRootVisual( gcnew WpfClock::Clock() );
+}
+//	電話っぽい何か
+void CMfcClockView::OnUpdatePhone( CCmdUI *pCmdUI )
+{
+	pCmdUI->SetCheck( (GetRootVisual<WpfClock::PhoneButtonsPage>() != nullptr) ? TRUE : FALSE );
+}
+void CMfcClockView::OnPhone()
+{
+	auto rootVisual = SetRootVisual( gcnew WpfClock::PhoneButtonsPage() );
+	//	サンプルなのでイベントハンドラのデリゲートを解除していない
+	rootVisual->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
+}
 #include <msclr\marshal_atl.h>
 void CMfcClockView::OnEnter( System::Object^ sender, System::EventArgs^ )
 {
@@ -123,42 +161,7 @@ void CMfcClockView::OnEnter( System::Object^ sender, System::EventArgs^ )
 	}
 	page->SetDefFocus();
 }
-void CMfcClockView::OnPopup()
-{
-	//	ホストオーナーをセットしたうえで、ポップアップウィンドウをダイアログ表示する(ここでは戻り値は受け取らない)
-	auto window = gcnew WpfClock::PopupClock();
-	auto helper = gcnew System::Windows::Interop::WindowInteropHelper( window );
-	helper->Owner = System::IntPtr( AfxGetMainWnd()->GetSafeHwnd() );
-	window->ShowDialog();
-}
-void CMfcClockView::OnUpdateNone( CCmdUI *pCmdUI )
-{
-	auto src = GetHwndSource();
-	pCmdUI->SetCheck( (src == nullptr || src->RootVisual == nullptr) ? TRUE : FALSE );
-}
-void CMfcClockView::OnNone()
-{
-	DestroyHwndSource();
-}
-void CMfcClockView::OnUpdateClock( CCmdUI *pCmdUI )
-{
-	pCmdUI->SetCheck( (GetRootVisual<WpfClock::Clock>() != nullptr) ? TRUE : FALSE );
-}
-void CMfcClockView::OnClock()
-{
-	SetRootVisual( gcnew WpfClock::Clock() );
-}
-
-void CMfcClockView::OnUpdatePhone( CCmdUI *pCmdUI )
-{
-	pCmdUI->SetCheck( (GetRootVisual<WpfClock::PhoneButtonsPage>() != nullptr) ? TRUE : FALSE );
-}
-void CMfcClockView::OnPhone()
-{
-	// TODO: ここにコマンド ハンドラー コードを追加します。
-	auto rootVisual = SetRootVisual( gcnew WpfClock::PhoneButtonsPage() );
-	rootVisual->RaiseEnterEvent += MAKE_DELEGATE( System::EventHandler, OnEnter );
-}
+//	マウスオーバーでアイテムサイズが変わるリストボックス
 void CMfcClockView::OnUpdateListbox( CCmdUI *pCmdUI )
 {
 	pCmdUI->SetCheck( (GetRootVisual<WpfClock::PhotoListPage>() != nullptr) ? TRUE : FALSE );
@@ -167,6 +170,7 @@ void CMfcClockView::OnListbox()
 {
 	SetRootVisual( gcnew WpfClock::PhotoListPage() );
 }
+//	住所録っぽい何か
 void CMfcClockView::OnUpdateAddr( CCmdUI *pCmdUI )
 {
 	pCmdUI->SetCheck( (GetRootVisual<WpfClock::AddrDetailPage>() != nullptr) ? TRUE : FALSE );
